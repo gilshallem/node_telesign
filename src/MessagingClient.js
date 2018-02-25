@@ -27,15 +27,16 @@ class MessagingClient extends RestClient {
      * @param phoneNumber: Phone number to call
      * @param message: Text of the message to be sent to the end user.
      * @param messageType: This parameter specifies the traffic type being sent in the message.
+     * @param opt:  additional parameters
      * transaction.
      */
-    message(callback, phoneNumber, message, messageType) {
+    message(callback, phoneNumber, message, messageType,opt) {
         var params = {
             phone_number: phoneNumber,
             message: message,
             message_type: messageType
         };
-        this.execute(callback, "POST", this.messaging_resource, params);
+        this.execute(callback, "POST", this.messaging_resource, extend(params,opt));
     }
 
     /***
@@ -50,6 +51,16 @@ class MessagingClient extends RestClient {
             this.messaging_status_resource + referenceId,
             null);
     }
+}
+// marge objects
+function extend(target) {
+    var sources = [].slice.call(arguments, 1);
+    sources.forEach(function (source) {
+        for (var prop in source) {
+            target[prop] = source[prop];
+        }
+    });
+    return target;
 }
 
 module.exports = MessagingClient;
